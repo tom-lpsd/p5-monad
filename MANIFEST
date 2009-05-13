@@ -1,8 +1,8 @@
-Build.PL
 Changes
 MANIFEST
-README
+Build.PL
 lib/Monad.pm
+lib/Monad/Maybe.pm
 t/00-load.t
 t/pod-coverage.t
 t/pod.t

@@ -1,5 +1,11 @@
 package Monad;
-use Mouse;
+use Mouse::Role;
+
+requires qw/bind inject/;
+
+sub fail {
+    confess @_;
+}
 
 =head1 NAME
 
@@ -18,7 +24,13 @@ our $VERSION = '0.01';
 
     use Monad;
 
-=cut
+=head1 FUNCTION
+
+=over
+
+=item B<fail> fail
+
+=back
 
 =head1 AUTHOR
 
