@@ -1,5 +1,6 @@
 Changes
 MANIFEST
+README
 Build.PL
 lib/Monad.pm
 lib/Monad/Maybe.pm
