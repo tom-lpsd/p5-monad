@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More 'no_plan';
 
-use Monad::Util;
+use Monad;
 use Monad::Maybe;
 
 sub add10 { $_[0] + 10 }

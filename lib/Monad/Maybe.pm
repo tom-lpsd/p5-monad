@@ -3,9 +3,9 @@ use Mouse;
 
 extends 'Exporter';
 
-our @EXPORT = qw/Just Nothing inject isNothing fromJust/;
+our @EXPORT = qw/Just Nothing isNothing fromJust/;
 
-with 'Monad';
+with 'Monad::Role::Monad';
 
 has _val     => (is => 'rw', default => undef);
 has _nothing => (is => 'rw', default => 0);

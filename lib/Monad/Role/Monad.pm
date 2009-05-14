@@ -1,21 +1,15 @@
-package Monad;
-use strict;
-use warnings;
-use base qw/Exporter/;
+package Monad::Role::Monad;
+use Mouse::Role;
 
-our @EXPORT = qw/liftM/;
+requires qw/bind inject/;
 
-sub liftM {
-    my $code = shift;
-    sub {
-        my $m = shift;
-        $m->bind(sub { $m->inject($code->(shift)) });
-    };
+sub fail {
+    confess @_;
 }
 
 =head1 NAME
 
-Monad - Monad with Perl
+Monad::Role::Monad - Monad interface
 
 =head1 VERSION
 
@@ -28,13 +22,15 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-    use Monad;
+    use Mouse;
+
+    with 'Monad::Role::Monad';
 
 =head1 FUNCTION
 
 =over
 
-=item B<liftM> liftM
+=item B<fail> fail
 
 =back
 
@@ -46,7 +42,7 @@ Tom Tsuruhara, C<< <tom.lpsd at gmail.com> >>
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Monad
+    perldoc Monad::Role::Monad
 
 =head1 COPYRIGHT & LICENSE
 
