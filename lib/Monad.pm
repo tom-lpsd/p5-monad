@@ -2,6 +2,7 @@ package Monad;
 use strict;
 use warnings;
 use base qw/Exporter/;
+use Monad::List;
 
 our @EXPORT = qw/liftM/;
 
