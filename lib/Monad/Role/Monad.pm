@@ -1,5 +1,5 @@
 package Monad::Role::Monad;
-use Mouse::Role;
+use Moose::Role;
 
 requires qw/bind inject/;
 

@@ -1,5 +1,5 @@
 package Monad::Maybe;
-use Mouse;
+use Moose;
 
 extends 'Exporter';
 
