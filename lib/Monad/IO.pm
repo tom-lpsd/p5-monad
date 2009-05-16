@@ -18,7 +18,7 @@ __PACKAGE__->meta->make_immutable;
 sub bind {
     my ($io, $code) = @_;
     my $next = sub {
-        $code->($io->_action->())->_action->();
+        runIO($code->(runIO($io)));
     };
     __PACKAGE__->new(_action => $next);
 }
@@ -29,8 +29,7 @@ sub inject {
 }
 
 sub runIO {
-    my $io = shift;
-    $io->_action->();
+    shift->_action->();
 }
 
 sub getLine () {
@@ -38,7 +37,7 @@ sub getLine () {
 }
 
 sub getContents () {
-    __PACKAGE__->new(_action => sub { join '', <> });
+    __PACKAGE__->new(_action => sub { local $/; <> });
 }
 
 *putChar = \&putStr;
