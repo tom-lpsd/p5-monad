@@ -1,7 +1,6 @@
 package Monad::IO;
 use Moose;
-
-extends 'Exporter';
+use Exporter qw(import);
 
 our @EXPORT = qw/runIO
                  getLine

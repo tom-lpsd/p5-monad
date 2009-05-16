@@ -1,7 +1,6 @@
 package Monad::Maybe;
 use Moose;
-
-extends 'Exporter';
+use Exporter qw(import);
 
 our @EXPORT = qw/Just Nothing isNothing fromJust/;
 
