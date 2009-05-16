@@ -4,7 +4,7 @@ use warnings;
 use Exporter qw(import);
 use Monad::List;
 
-our @EXPORT = qw/liftM/;
+our @EXPORT = qw/mapM liftM/, map { "liftM$_" } (2..5);
 
 sub _mk_lift {
     my $n = shift;
@@ -24,9 +24,24 @@ for (2..5) {
     *{"liftM$_"} = _mk_lift($_);
 }
 
+sub mapM (&$);
+
+sub mapM (&$) {
+    my ($code, $xs) = @_;
+    return $code->()->inject([]) if @$xs == 0;
+    my $x = shift @$xs;
+    my $m = $code->($x);
+    $m->bind(
+        sub {
+            my $y = shift;
+            (mapM { $code->(@_) } $xs)->bind(sub { $m->inject([$y, @{+shift}]) });
+        }
+    );
+}
+
 =head1 NAME
 
-Monad - Monad with Perl
+Monad - Monad in Perl
 
 =head1 VERSION
 
@@ -35,7 +50,6 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
-
 
 =head1 SYNOPSIS
 

@@ -25,7 +25,7 @@ sub inject {
 }
 
 sub Just {
-    __PACKAGE__->new(_val => $_[0]);
+    __PACKAGE__->new(_val => (@_ == 1 ? $_[0] : \@_));
 }
 
 sub Nothing {

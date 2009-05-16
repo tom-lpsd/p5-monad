@@ -43,14 +43,16 @@ sub getContents () {
 
 *putChar = \&putStr;
 
+my $unit = '()';
+
 sub putStr {
     my $str = shift;
-    Action { print $str };
+    Action { print $str; $unit };
 }
 
 sub putStrLn {
     my $str = shift;
-    Action { print "$str\n" };
+    Action { print "$str\n"; $unit };
 }
 
 =head1 NAME
