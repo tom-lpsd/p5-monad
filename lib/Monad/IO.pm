@@ -15,41 +15,42 @@ has _action => (is => 'rw', isa => 'CodeRef');
 
 __PACKAGE__->meta->make_immutable;
 
-sub bind {
-    my ($io, $code) = @_;
-    my $next = sub {
-        runIO($code->(runIO($io)));
-    };
-    __PACKAGE__->new(_action => $next);
-}
-
-sub inject {
-    shift; my @args = @_;
-    __PACKAGE__->new(_action => sub { wantarray ? @args : $args[0] });
+sub Action (&) {
+    __PACKAGE__->new(_action => $_[0]);
 }
 
 sub runIO {
     shift->_action->();
 }
 
+sub bind {
+    my ($io, $code) = @_;
+    Action { runIO($code->(runIO($io))) };
+}
+
+sub inject {
+    shift; my @args = @_;
+    Action { wantarray ? @args : $args[0] };
+}
+
 sub getLine () {
-    __PACKAGE__->new(_action => sub { $_ = <>; chomp; $_ });
+    Action { $_ = <STDIN>; chomp; $_ };
 }
 
 sub getContents () {
-    __PACKAGE__->new(_action => sub { local $/; <> });
+    Action { local $/; <STDIN> };
 }
 
 *putChar = \&putStr;
 
 sub putStr {
     my $str = shift;
-    __PACKAGE__->new(_action => sub { print $str });
+    Action { print $str };
 }
 
 sub putStrLn {
     my $str = shift;
-    __PACKAGE__->new(_action => sub { print "$str\n" });
+    Action { print "$str\n" };
 }
 
 =head1 NAME
@@ -78,6 +79,10 @@ our $VERSION = '0.01';
 =item B<inject>
 
 =item B<runIO>
+
+=item B<Action>
+
+make IO from codeRef.
 
 =item B<getLine>
 
