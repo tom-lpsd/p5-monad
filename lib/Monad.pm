@@ -1,17 +1,27 @@
 package Monad;
 use strict;
 use warnings;
-use base qw/Exporter/;
+use Exporter qw(import);
 use Monad::List;
 
 our @EXPORT = qw/liftM/;
 
-sub liftM {
-    my $code = shift;
+sub _mk_lift {
+    my $n = shift;
     sub {
-        my $m = shift;
-        $m->bind(sub { $m->inject($code->(shift)) });
+        my $code = shift;
+        sub {
+            my $m = shift;
+            $m->bind(sub { $m->inject($code->(@_[0..($n-1)])) });
+        };
     };
+}
+
+*liftM = _mk_lift(1);
+
+for (2..5) {
+    no strict 'refs';
+    *{"liftM$_"} = _mk_lift($_);
 }
 
 =head1 NAME
@@ -36,6 +46,14 @@ our $VERSION = '0.01';
 =over
 
 =item B<liftM> liftM
+
+=item B<liftM2> liftM2
+
+=item B<liftM3> liftM3
+
+=item B<liftM4> liftM4
+
+=item B<liftM5> liftM5
 
 =back
 
