@@ -11,6 +11,8 @@ has _nothing => (is => 'rw', default => 0);
 
 __PACKAGE__->meta->make_immutable;
 
+use Monad::Attributes;
+
 sub bind {
     my ($maybe, $code) = @_;
     if (isNothing($maybe)) {
@@ -24,11 +26,11 @@ sub inject {
     Just(@_);
 }
 
-sub Just {
-    __PACKAGE__->new(_val => (@_ == 1 ? $_[0] : \@_));
+sub Just ($) {
+    __PACKAGE__->new(_val => $_[0]);
 }
 
-sub Nothing {
+sub Nothing () {
     __PACKAGE__->new(_nothing => 1);
 }
 

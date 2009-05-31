@@ -1,6 +1,6 @@
 package Monad::List;
 use Moose;
-
+use Monad::Attributes;
 extends qw(autobox);
 
 with 'Monad::Role::Monad';

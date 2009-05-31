@@ -1,5 +1,6 @@
 package Monad::IO;
 use Moose;
+use Monad::Attributes;
 use Exporter qw(import);
 
 our @EXPORT = qw/runIO

@@ -1,10 +1,17 @@
 package Monad;
 use strict;
 use warnings;
-use Exporter qw(import);
+use Exporter qw/import/;
+use attributes qw/get/;
 use Monad::List;
+use Monad::Attributes;
 
-our @EXPORT = qw/mapM liftM/, map { "liftM$_" } (2..5);
+our @EXPORT = qw/MODIFY_CODE_ATTRIBUTES
+                 FETCH_CODE_ATTRIBUTES
+                 mapM liftM /, map { "liftM$_" } (2..5);
+
+*FETCH_CODE_ATTRIBUTES  = \&Monad::Attributes::FETCH_CODE_ATTRIBUTES;
+*MODIFY_CODE_ATTRIBUTES = \&Monad::Attributes::MODIFY_CODE_ATTRIBUTES;
 
 sub _mk_lift {
     my $n = shift;
@@ -24,19 +31,26 @@ for (2..5) {
     *{"liftM$_"} = _mk_lift($_);
 }
 
-sub mapM (&$);
+sub __mapM (&$$);
 
-sub mapM (&$) {
-    my ($code, $xs) = @_;
-    return $code->()->inject([]) if @$xs == 0;
-    my $x = shift @$xs;
+sub __mapM (&$$) {
+    my ($code, $list, $class) = @_;
+    return $class->inject([]) if @$list == 0;
+    my ($x, @xs) = @{$list};
     my $m = $code->($x);
     $m->bind(
         sub {
             my $y = shift;
-            (mapM { $code->(@_) } $xs)->bind(sub { $m->inject([$y, @{+shift}]) });
+            (__mapM \&$code, \@xs, $class)->bind(
+                sub { $class->inject([$y, @{+shift}]) }
+            );
         }
     );
+}
+
+sub mapM (&$) {
+    my ($code, $xs) = @_;
+    __mapM \&$code, $xs, "Monad::@{[get($code)]}";
 }
 
 =head1 NAME
@@ -68,6 +82,8 @@ our $VERSION = '0.01';
 =item B<liftM4> liftM4
 
 =item B<liftM5> liftM5
+
+=item B<mapM> mapM
 
 =back
 
